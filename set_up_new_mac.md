@@ -1,3 +1,9 @@
-1. Configure "System Preferences"
+* Configure "System Preferences"
 
-2. Set up mail account through "System Preference" > "Internet Accounts"
+* Email accounts: "System Preference" > "Internet Accounts"
+
+* Dropbox
+
+* iterm2
+
+* XQuartz
