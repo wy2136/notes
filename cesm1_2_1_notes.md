@@ -7,10 +7,12 @@
     svn export --force https://github.com/NCAR/ParallelIO.git/tags/pio1_7_1/pio ./cesm1_2_1/models/utils/pio
 
 ### Build
+Create an experiment case (CESMROOT=cesm1_2_1, where the source files are downloaded):
 
+    cd $CESMROOT/scripts
     ./create_newcase -case test1 -res f45_g37 -compset X -mach userdefined
     
-##### Edit xml files:
+Edit xml files:
 
     ./xmlchange OS=Linux
     ./xmlchange COMPILER=gnu
@@ -20,9 +22,12 @@
     ./xmlchange DIN_LOC_ROOT=/tigress/wenchang/cesm1_2_1/inputdata
     ./xmlchange MAX_TASKS_PER_NODE=16
 
+Set up the experiment
+    
+    cd test1
     ./cesm_setup
 
-##### Edit Macro File
+Edit Macro File
     
     SLIBS+=# USERDEFINED $(shell $(NETCDF_PATH)/bin/nc-config --flibs)
 to    
@@ -41,9 +46,13 @@ to
     
     NETCDF_PATH:= $(NETCDF) /usr/local/netcdf/gcc/hdf5-1.8.12/4.3.1.1
     
-##### Edit Tools/Makefile
+Edit Tools/Makefile
 
     NETCDF_PATH=$(NETCDF_PATH) LDFLAGS="$(LDFLAGS)" \
 to
     
     NETCDF_PATH="$(NETCDF_PATH)" LDFLAGS="$(LDFLAGS)" \
+
+Build
+
+    ./test1.build
