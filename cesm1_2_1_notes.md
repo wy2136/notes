@@ -5,3 +5,12 @@
 
     svn export --force https://github.com/PARALLELIO/genf90/tags/genf90_140121 ./cesm1_2_1/tools/cprnc/genf90
     svn export --force https://github.com/NCAR/ParallelIO.git/tags/pio1_7_1/pio ./cesm1_2_1/models/utils/pio
+
+### Build
+    ./xmlchange OS=Linux
+    ./xmlchange COMPILER=gnu
+    ./xmlchange MPILIB=openmpi
+    ./xmlchange EXEROOT=/scratch/gpfs2/$USER/cesm1_2_1/test1
+    ./xmlchange RUNDIR=/scratch/gpfs2/$USER/cesm1_2_1/test1
+    ./xmlchange DIN_LOC_ROOT=/tigress/wenchang/cesm1_2_1/inputdata
+    ./xmlchange MAX_TASKS_PER_NODE=16
