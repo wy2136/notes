@@ -1,4 +1,8 @@
 # CESM 1.2.1 Porting on Tiger
+* Wenchang Yang (wenchang@princeton.edu)
+* Department of Geosciences, Princeton University
+
+**Acknowledgement**: Many thanks to Dr. [**Angel Munoz**](https://scholar.princeton.edu/agmunoz) who shares his great expertise on climate modeling and makes this note possible.
 
 ### Step 1: Download the Code
 Get an account at http://www.cesm.ucar.edu/models/register/register.html and download the source code:
