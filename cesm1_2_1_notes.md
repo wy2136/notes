@@ -49,6 +49,13 @@ Edit Tools/Makefile
     ---->    
     NETCDF_PATH="$(NETCDF_PATH)" LDFLAGS="$(LDFLAGS)" \
 
+Edit env_mach_specific:
+    
+    source /usr/share/Modules/init/csh
+    module load openmpi/gcc/2.0.2/64
+    module load netcdf/gcc/hdf5-1.8.12/4.3.1.1
+    module load hdf5/gcc/1.8.12
+
 Build
 
     ./test1.build
