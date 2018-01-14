@@ -103,7 +103,7 @@ Edit `test1.run` by adding the following lines after the first line:
 	#SBATCH --mail-user=yournetid@princeton.edu
 	set npes = 256
 
-and the line
+and add the line
 	
 	srun -n $npes $EXEROOT/cesm.exe >&! cesm.log.$LID
 
