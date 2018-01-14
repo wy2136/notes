@@ -30,27 +30,23 @@ Set up the experiment
 Edit Macro File
     
     SLIBS+=# USERDEFINED $(shell $(NETCDF_PATH)/bin/nc-config --flibs)
-to    
-    
+    --->
     SLIBS+= $(LDFLAGS) -lnetcdff -lnetcdf
     
     
     FFLAGS:= -O -fconvert=big-endian -ffree-line-length-none -ffixed-line-length-none
-to   
-    
+    ---->    
     FFLAGS:= -O -fconvert=big-endian -ffree-line-length-none -ffixed-line-length-none -fno-range-check -fcray-pointer
     
     
     NETCDF_PATH:= USERDEFINED_MUST_EDIT_THIS
-to    
-    
+    ---->
     NETCDF_PATH:= $(NETCDF) /usr/local/netcdf/gcc/hdf5-1.8.12/4.3.1.1
     
 Edit Tools/Makefile
 
     NETCDF_PATH=$(NETCDF_PATH) LDFLAGS="$(LDFLAGS)" \
-to
-    
+    ---->    
     NETCDF_PATH="$(NETCDF_PATH)" LDFLAGS="$(LDFLAGS)" \
 
 Build
