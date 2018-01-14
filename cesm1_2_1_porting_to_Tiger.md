@@ -1,4 +1,4 @@
-# CESM 1.2.1 Porting in Tiger
+# CESM 1.2.1 Porting to Tiger
 
 ### Download the Code
 Get an account at http://www.cesm.ucar.edu/models/register/register.html and download the source code:
