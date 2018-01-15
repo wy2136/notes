@@ -213,7 +213,6 @@ Step 5, create an `mkbatch.tiger` file. Copy the `mkbatch.userdefined` file to `
 
 and add the following lines to `mkbatch.tiger` after line 30 of `#!/bin/csh -f`:
 	
-	#!/bin/csh -f
 	#SBATCH -N 32 # node count
 	#SBATCH --ntasks-per-node=16
 	#SBATCH -t 20:00:00
@@ -234,8 +233,12 @@ That's it! Next time the build/run process will be much easier:
 	
 	./test_tiger.build
 
-Edit the `test_tiger.run` file. Replace the yourNetID with your NetID and change the line of `mpirun` to `srun -n $npes $EXEROOT/cesm.exe >&! cesm.log.$LID`. You might also need to change the node count or SBATCH time option depending the nature of your case. After these have all been done, we can run the model:
+Edit the `test_tiger.run` file. Replace the yourNetID with your NetID and change the line of `mpirun` to 
 	
-	sbatch test_tiger.build
+	srun -n $npes $EXEROOT/cesm.exe >&! cesm.log.$LID
+
+You might also need to change the node count or SBATCH time option depending the nature of your case. After all of these have been done, we can now run the model:
+	
+	sbatch test_tiger.run
 
 
