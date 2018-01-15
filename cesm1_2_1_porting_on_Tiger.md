@@ -159,7 +159,7 @@ Now, we can run the model:
 Good luck!
 
 ### Define the Machine `tiger`
-It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the ``-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Motivated by the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
+It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the `-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Motivated by the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
 
 Step 1, pick the name `tiger`, or whatever name you like. And go to the directory `$CESMROOT/scripts/ccsm_utils/Machines`
 	
