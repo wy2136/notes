@@ -157,3 +157,85 @@ Now, we can run the model:
 	sbatch FLORish.run
 	
 Good luck!
+
+### Define the Machine `tiger`
+It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the ``-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Motivated by the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
+
+Step 1, pick the name `tiger`, or whatever name you like. And go to the directory `$CESMROOT/scripts/ccsm_utils/Machines`
+	
+	cd $CESMROOT/scripts/ccsm_utils/Machines
+
+Step 2, Edit `config_machines.xml` and add a section for `tiger`. Copy `userdefined` content and modify:
+	
+	<machine MACH="tiger">
+	        <DESC>Tiger at Princeton, Linux, slurm, 16 pes/node, gnu/openmpi/netcdf</DESC> <!-- can be anything -->
+	        <OS>LINUX</OS>              <!-- LINUX,Darwin,CNL,AIX,BGL,BGP -->
+	        <COMPILERS>gnu</COMPILERS>  <!-- intel,ibm,pgi,pathscale,gnu,cray,lahey -->
+	        <MPILIBS>openmpi</MPILIBS>  <!-- openmpi, mpich, ibm, mpi-serial -->
+	        <RUNDIR>/scratch/gpfs2/$CCSMUSER/cesm1_2_1/$CASE/run</RUNDIR>       <!-- complete path to the run directory -->
+	        <EXEROOT>/scratch/gpfs2/$CCSMUSER/cesm1_2_1/$CASE/bld</EXEROOT>     <!-- complete path to the build directory -->
+	        <DIN_LOC_ROOT>/tigress/yourNetID/cesm1_2_1/inputdata</DIN_LOC_ROOT>  <!-- complete path to the inputdata directory -->
+	        <DIN_LOC_ROOT_CLMFORC>USERDEddFINED_optional_build</DIN_LOC_ROOT_CLMFORC> <!-- path to the optional forcing data for CLM (for CRUNCEP forcing) -->
+	        <DOUT_S>FALSE</DOUT_S>                                            <!-- logical for short term archiving -->
+	        <DOUT_S_ROOT>USERDEFINED_optional_run</DOUT_S_ROOT>               <!-- complete path to a short term archiving directory -->
+	        <DOUT_L_MSROOT>USERDEFINED_optional_run</DOUT_L_MSROOT>           <!-- complete path to a long term archiving directory -->
+	        <CCSM_BASELINE>USERDEFINED_optional_run</CCSM_BASELINE>           <!-- where the cesm testing scripts write and read baseline results -->
+	        <CCSM_CPRNC>USERDEFINED_optional_test</CCSM_CPRNC>                <!-- path to the cprnc tool used to compare netcdf history files in testing -->
+	        <BATCHQUERY>squeue</BATCHQUERY>
+	        <BATCHSUBMIT>sbatch</BATCHSUBMIT>
+	        <SUPPORTED_BY>USERDEFINED_optional</SUPPORTED_BY>
+	        <GMAKE_J>1</GMAKE_J>
+	        <MAX_TASKS_PER_NODE>16</MAX_TASKS_PER_NODE>
+	</machine>
+Replace `yourNetID` with your Princeton NetID here.
+
+Step 3, edit `config_compilers.xml` to translate the additions you made to the Macros file to support `tiger` specific settings.
+	
+	<compiler COMPILER="gnu" MACH="tiger">
+	  <SLIBS>$(LDFLAGS) -lnetcdff -lnetcdf</SLIBS>
+	  <ADD_FFLAGS> -fno-range-check -fcray-pointer </ADD_FFLAGS>
+	  <NETCDF_PATH>/usr/local/netcdf/gcc/hdf5-1.8.12/4.3.1.1</NETCDF_PATH>
+	  <PNETCDF_PATH></PNETCDF_PATH>
+	  <ADD_CPPDEFS></ADD_CPPDEFS>
+	  <CONFIG_ARGS></CONFIG_ARGS>
+	  <ESMF_LIBDIR></ESMF_LIBDIR>
+	  <MPI_LIB_NAME></MPI_LIB_NAME>
+	  <MPI_PATH></MPI_PATH>
+	</compiler>
+
+Step 4, create an `env_mach_specific.tiger` file. This should be a copy of the `env_mach_specific` file from the `test1` case directory.
+	
+	cp $CCSMROOT/scripts/test1/env_mach_specific $CCSMROOT/scripts/ccsm_utils/Machines/env_mach_specific.tiger
+
+Step 5, create an `mkbatch.tiger` file. Copy the `mkbatch.userdefined` file to `mkbatch.tiger`
+	
+	cp mkbatch.userdefined mkbatch.tiger
+
+and add the following lines to `mkbatch.tiger` after line 30 of `#!/bin/csh -f`:
+	
+	#!/bin/csh -f
+	#SBATCH -N 32 # node count
+	#SBATCH --ntasks-per-node=16
+	#SBATCH -t 20:00:00
+	# sends mail when process begins, and
+	# when it ends. Make sure you define your email
+	#SBATCH --mail-type=begin
+	#SBATCH --mail-type=end
+	#SBATCH --mail-user=yourNetID@princeton.edu
+	set npes = 512
+
+That's it! Next time the build/run process will be much easier:
+	
+	cd $CESMROOT/scripts
+	./create_newcase -case test_tiger -res f45_g37 -compset X -mach tiger
+	
+	cd test_tiger
+	./cesm_setup
+	
+	./test_tiger.build
+
+Edit the `test_tiger.run` file. Replace the yourNetID with your NetID and change the line of `mpirun` to `srun -n $npes $EXEROOT/cesm.exe >&! cesm.log.$LID`. You might also need to change the node count or SBATCH time option depending the nature of your case. After these have all been done, we can run the model:
+	
+	sbatch test_tiger.build
+
+
