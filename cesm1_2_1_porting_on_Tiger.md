@@ -2,21 +2,21 @@
 * Wenchang Yang (wenchang@princeton.edu)
 * Department of Geosciences, Princeton University
 
-**Acknowledgement**: Many thanks to Dr. [**Angel Munoz**](https://scholar.princeton.edu/agmunoz) who shares his great expertise on climate modeling and makes this note possible.
+**Acknowledgement**: Many thanks to Dr. [**Angel Munoz**](https://iri.columbia.edu/contact/staff-directory/angel-munoz/) who shares his great expertise on climate modeling and makes this note possible.
 
 ### Step 1: Download the Code
-Get an account at http://www.cesm.ucar.edu/models/register/register.html and download the source code:
+Get an account at [CESM website](http://www.cesm.ucar.edu/models/register/register.html) and download the source code:
 	
 	cd /tigress/$USER
 	svn co https://svn-ccsm-models.cgd.ucar.edu/cesm1/release_tags/cesm1_2_1
 
-We also need extra downloads due to a reported bug (see https://bb.cgd.ucar.edu/googlecode-repositories-are-offline-pio-source-not-found):
+We also need extra downloads due to a [reported bug](https://bb.cgd.ucar.edu/googlecode-repositories-are-offline-pio-source-not-found):
 
 	svn export --force https://github.com/PARALLELIO/genf90/tags/genf90_140121 ./cesm1_2_1/tools/cprnc/genf90
 	svn export --force https://github.com/NCAR/ParallelIO.git/tags/pio1_7_1/pio ./cesm1_2_1/models/utils/pio
 
 ### Step 2: Create an Experiment Case
-Go to the `scripts` directory and create an experiment case (`$CESMROOT` is `cesm1_2_1`, where the source files are downloaded):
+Go to the `scripts` directory and create an experiment case (`$CESMROOT` is where the source files are downloaded):
 
     cd $CESMROOT/scripts
     ./create_newcase -case test1 -res f45_g37 -compset X -mach userdefined
@@ -32,6 +32,8 @@ Edit `env_*.xml` files using the tool of `xmlchange`:
     ./xmlchange RUNDIR=/scratch/gpfs2/$USER/cesm1_2_1/test1
     ./xmlchange DIN_LOC_ROOT=/tigress/$USER/cesm1_2_1/inputdata
     ./xmlchange MAX_TASKS_PER_NODE=16
+    ./xmlchange BATCHQUERY=squeue
+    ./xmlchange BATCHSUBMIT=sbatch
 
 Set up the experiment:
     
@@ -86,11 +88,6 @@ add the following lines:
     ./test1.build
 	
 ### Step 5: Run
-Edit the `env_run.xml` by using the `xmlchange` tool:
-	
-    ./xmlchange BATCHQUERY=squeue
-    ./xmlchange BATCHSUBMIT=sbatch
-
 Edit `test1.run` by adding the following lines after the first line:
 	
 	#SBATCH -N 16 # node count
@@ -111,9 +108,9 @@ after the line
 
 	#mpirun -np 16 $EXEROOT/cesm.exe >&! cesm.log.$LID
 
-Run the model:
+Submit the job of running the model:
 	
-	sbatch test1.run
+	./test1.submit
 	
 ### FLORish
 After running `test1` successfully, we can try another experiment case called `FLORish`, which has a nontrivial configuration and a spatial resolution similar to the [FLOR](https://www.gfdl.noaa.gov/cm2-5-and-flor/) model from GFDL .
