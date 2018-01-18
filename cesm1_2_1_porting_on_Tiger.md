@@ -24,7 +24,9 @@ Go to the `scripts` directory and create an experiment case (`$CESMROOT` is wher
 ### Step 3: Set up the Configuration
     
 Edit `env_*.xml` files using the tool of `xmlchange`:
-
+	
+	cd test1
+	
     ./xmlchange OS=Linux
     ./xmlchange COMPILER=gnu
     ./xmlchange MPILIB=openmpi
@@ -37,7 +39,6 @@ Edit `env_*.xml` files using the tool of `xmlchange`:
 
 Set up the experiment:
     
-    cd test1
     ./cesm_setup
 
 Edit `Macro`:
