@@ -199,12 +199,12 @@ You might also need to change the node count or SBATCH time option depending the
 
 
 ### FLORish
-After running `test1` successfully, we can try another experiment case called `FLORish`, which has a nontrivial configuration and a spatial resolution similar to the [FLOR](https://www.gfdl.noaa.gov/cm2-5-and-flor/) model from GFDL .
+After running `test1` successfully and with a new machine defined, we can try another experiment case called `test_FLORish`, which has a nontrivial configuration and a spatial resolution similar to the [FLOR](https://www.gfdl.noaa.gov/cm2-5-and-flor/) model from GFDL .
 
 	cd $CESMROOT/scripts
 	./create_newcase -case test_FLORish -res f05_g16 -compset B1850CN -mach tiger
 
-For FLORish, we need to create the `ice/cice` directory and download required data before building and running:
+For FLORish, we might need to create the `ice/cice` directory and download required data before building and running:
 	
 	cd $CESMROOT/inputdata
 	mkdir ice
