@@ -113,48 +113,6 @@ Submit the job of running the model:
 	
 	./test1.submit
 	
-### FLORish
-After running `test1` successfully, we can try another experiment case called `FLORish`, which has a nontrivial configuration and a spatial resolution similar to the [FLOR](https://www.gfdl.noaa.gov/cm2-5-and-flor/) model from GFDL .
-
-	cd $CESMROOT/scripts
-	./create_newcase -case ../cases/FLORish -res f05_g16 -compset B1850CN -mach userdefined
-
-For FLORish, we need to create the `ice/cice` directory and download required data before building and running:
-	
-	cd $CESMROOT/inputdata
-	mkdir ice
-	mkdir ice/cice
-	cd ice/cice
-	svn export https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/ice/cice/iced.0001-01-01.gx1v6_20080212
-
-Otherwise, the configuring and building process are similar to the case `test1` as described above (step 2-4). The running configuration is a little different:
-
-First, edit the `env_run.xml` file to change the running period from 5 days to 3 years:
-	
-	./xmlchange STOP_OPTION=nyears
-	./xmlchange STOP_N=3
- 
-Second, edit the `FLORish.run` script:
-	
-	#SBATCH -N 16 # node count
-	---->
-	#SBATCH -N 32 # node count
-	
-	
-	#SBATCH -t 00:30:00
-	---->
-	#SBATCH -t 20:00:00
-	
-	
-	set npes = 256
-	---->
-	set npes = 512
-	
-Now, we can run the model:
-	
-	sbatch FLORish.run
-	
-Good luck!
 
 ### Define the Machine `tiger`
 It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the `-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Following the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
@@ -237,6 +195,40 @@ Edit the `test_tiger.run` file. Replace the yourNetID with your NetID and change
 
 You might also need to change the node count or SBATCH time option depending the nature of your case. After all of these have been done, we can now run the model:
 	
-	sbatch test_tiger.run
+	./test_tiger.run.submit
 
 
+### FLORish
+After running `test1` successfully, we can try another experiment case called `FLORish`, which has a nontrivial configuration and a spatial resolution similar to the [FLOR](https://www.gfdl.noaa.gov/cm2-5-and-flor/) model from GFDL .
+
+	cd $CESMROOT/scripts
+	./create_newcase -case test_FLORish -res f05_g16 -compset B1850CN -mach tiger
+
+For FLORish, we need to create the `ice/cice` directory and download required data before building and running:
+	
+	cd $CESMROOT/inputdata
+	mkdir ice
+	mkdir ice/cice
+	cd ice/cice
+	svn export https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/ice/cice/iced.0001-01-01.gx1v6_20080212
+
+Then we can do the setup and building:
+	
+	cd $CESMROOT/scripts/ test_FLORish
+	
+	./cesm_setup
+	
+	./test_FLORish.build
+
+Before running the model. We need to do modify some parameters related to the model run. First, change the running period from 5 days to 3 years:
+	
+	./xmlchange STOP_OPTION=nyears
+	./xmlchange STOP_N=3
+	./xmlchange REST_N=1
+	./xmlchange RESUBMIT=5
+	
+Now, we can run the model:
+	
+	./test_FLORish.submit
+	
+Good luck!
