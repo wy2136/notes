@@ -30,9 +30,9 @@ Edit `env_*.xml` files using the tool of `xmlchange`:
     ./xmlchange OS=Linux
     ./xmlchange COMPILER=gnu
     ./xmlchange MPILIB=openmpi
-    ./xmlchange EXEROOT=/scratch/gpfs2/$USER/cesm1_2_1/test1
-    ./xmlchange RUNDIR=/scratch/gpfs2/$USER/cesm1_2_1/test1
-    ./xmlchange DIN_LOC_ROOT=/tigress/$USER/cesm1_2_1/inputdata
+    ./xmlchange EXEROOT=/scratch/gpfs2/$CCSMUSER/cesm1_2_1/test1
+    ./xmlchange RUNDIR=/scratch/gpfs2/$CCSMUSER/cesm1_2_1/test1
+    ./xmlchange DIN_LOC_ROOT=/tigress/$CCSMUSER/cesm1_2_1/inputdata
     ./xmlchange MAX_TASKS_PER_NODE=16
     ./xmlchange BATCHQUERY=squeue
     ./xmlchange BATCHSUBMIT=sbatch
@@ -81,9 +81,9 @@ add the following lines:
     
     source /usr/share/Modules/init/csh
     module load openmpi/gcc/2.0.2/64
+	module load hdf5/gcc/1.8.12
     module load netcdf/gcc/hdf5-1.8.12/4.3.1.1
-    module load hdf5/gcc/1.8.12
-
+    
 ### Step 4: Build
 
     ./test1.build
@@ -91,7 +91,7 @@ add the following lines:
 ### Step 5: Run
 Edit `test1.run` by adding the following lines after the first line:
 	
-	#SBATCH -N 16 # node count
+	#SBATCH -N 1 # node count
 	#SBATCH --ntasks-per-node=16
 	#SBATCH -t 00:30:00
 	# sends mail when process begins, and
@@ -99,7 +99,7 @@ Edit `test1.run` by adding the following lines after the first line:
 	#SBATCH --mail-type=begin
 	#SBATCH --mail-type=end
 	#SBATCH --mail-user=yournetid@princeton.edu
-	set npes = 256
+	set npes = 16
 
 and add the line
 	
@@ -157,7 +157,7 @@ Now, we can run the model:
 Good luck!
 
 ### Define the Machine `tiger`
-It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the `-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Motivated by the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
+It is great to enable the out-of-the-box capability for the machine `tiger` so that most of the work in step 3 and 5 can be avoided if we specify the `-mach` option in step 2 as `tiger`(or whatever name you want) instead of `userdefined`. Following the `cesm1.2.1` [user guide](http://www.cesm.ucar.edu/models/cesm1.2/cesm/doc/usersguide/x1794.html), our implementation is:
 
 Step 1, pick the name `tiger`, or whatever name you like. And go to the directory `$CESMROOT/scripts/ccsm_utils/Machines`
 	
